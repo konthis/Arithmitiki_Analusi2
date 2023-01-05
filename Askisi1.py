@@ -1,24 +1,24 @@
 from pylab import pi,sin, plot,xlabel,ylabel,grid,show
+from matrixSolve import Gauss_Seidel
 import random
-import numpy
+from numpy import array, zeros, linalg, dot, transpose
 
 class Exercise1:
     
-    points = [(-pi, sin(-pi)),(-3.1, sin(-3.1)),(-2.6, sin(-2.6)),(-1.3, sin(-1.3)),
-             (0.75, sin(0.75)),(0,sin(0)),(0.5, sin(0.5)),(1.7, sin(1.7)),(2.75, sin(2.75)),(pi,sin(pi))]
+    points = [(-pi, sin(-pi)),
+              (-2.6, sin(-2.6)),
+              (-1.3, sin(-1.3)),
+              (-0.6, sin(-0.6)),
+              (0,sin(0)),
+              (0.5, sin(0.5)),
+              (0.75, sin(0.75)),
+              (1.7, sin(1.7)),
+              (2.75, sin(2.75)),
+              (pi,sin(pi))]
 
     xi = [i for i,j in points]
     yi = [j for i,j in points]
 
-    def graph(self):
-        x = [i[0] for i in self.points]
-        y = [i[1] for i in self.points]
-        plot(x,y)
-        xlabel('x')
-        ylabel('y')
-        grid(True)
-        show()
-        
     def Li(self,i, x):
         n = len(self.points) # total points
         result = 1
@@ -34,100 +34,57 @@ class Exercise1:
         for i in range(n):
             result += self.points[i][1]*self.Li(i,x)
         return result
-    
+
     def splines(self, x):
-        n = len(self.points) - 1
-        a = [0.]*(n-1)
-        b = [0.]*n
-        d = [0.]*n
-        h = [self.points[i+1][0] - self.points[i][0]  for i in range(n)]
-        c = [0.]*(n+1)
-        l = [0.]*(n+1)
-        u = [0.]*(n+1)
-        z = [0.]*(n+1)
-        for i in range(1,n-1):
-            a[i] = (3./h[i])*(self.points[i+1][1]-self.points[i][1]) - (3./h[i-1])*(self.points[i][1] - self.points[i-1][1])
+        n = len(self.points)
+        a = zeros((n,1))
+        dx = zeros((n-1,1))
+        dy = zeros((n-1,1))
 
-        l[0] = 1.
-        l[n] = 1.
+        for i in range(n-1):
+            a[i] = self.points[i][1]
+            dx[i] = self.points[i+1][0] - self.points[i][0]        
+            dy[i] = self.points[i+1][1] - self.points[i][1]        
+
+        A = zeros((n,n))
+        A[0][0] = 1
+        A[n-1][n-1] = 1
+        r = zeros((n,1))
+
         for i in range(1,n-1):
-            l[i] = 2.*(self.points[i+1][0]-self.points[i-1][0])-h[i-1]*u[i-1]
-            z[i] = (a[i]-h[i-1]*z[i-1])/l[i]
+            A[i][i-1] = dx[i-1]
+            A[i][i] = 2*(dx[i-1] + dx[i])
+            A[i][i+1] = dx[i]
+            r[i] = 3*(dy[i]/dx[i] - dy[i-1]/dx[i-1])
+
+        c = Gauss_Seidel(A,r, 5e-5) # Solve for ci
         
-        for i in range(n-2,-1,-1):
-            c[i] = z[i] - u[i]*c[i+1]
-            b[i] = (self.points[i+1][1] - self.points[i][1])/h[i] - h[i]*(c[i+1] + 2*c[i])/3.
-            d[i] = (c[i+1]-c[i])/(3.*h[i])
+        b = zeros((n-1,1))
+        d = zeros((n-1,1))
+        for i in range(n-1):
+            d[i] = (c[i+1]-c[i])/(3*dx[i]) 
+            b[i] = dy[i]/dx[i] - (dx[i]/3)*(2*c[i]+c[i+1])
+        
+        for i in range(n-1):
+            if self.points[i][0]<x<self.points[i+1][0]:
+                return a[i]+b[i]*(x-self.points[i][0]) + \
+                       c[i]*(x-self.points[i][0])**2 + \
+                       d[i]*(x-self.points[i][0])**3
 
+    def leastSquares(self, x):
+        n = len(self.points)
+        A = zeros((n,4))
+        b = zeros((n,1)) 
         for i in range(n):
-            if(self.points[i][0]<x<self.points[i+1][0]):
-                return self.points[i][1] + b[i] * x + c[i] * pow(x, 2) + d[i] * pow(x, 3)
-            
-
+            A[i][0] = 1
+            A[i][1] = self.points[i][0]
+            A[i][2] = self.points[i][0]**2
+            A[i][3] = self.points[i][0]**3
+            b[i] = self.points[i][1]
         
+        ATA = dot(transpose(A),A)
+        ATb = dot(transpose(A),b)
 
-    def Msplines(self, x):
-        hi = []
-        for i in range(len(self.xi) - 1):
-            hi.append(self.xi[i + 1] - self.xi[i])
-
-        q1 = []
-        for i in range(len(self.yi) - 1):
-            q1.append((3 * (
-                    self.yi[i + 1] * hi[i - 1] - self.yi[i] * (self.xi[i + 1] - self.xi[i - 1]) + self.yi[i - 1] *
-                    hi[i])) / (hi[i-1]*hi[i]))
-
-        l = []
-        u = []
-        z = []
-
-        l.append(1)
-        u.append(0)
-        z.append(0)
-
-        for i in range(1, len(self.xi) - 1):
-            l.append(2 * (self.xi[i + 1] - self.xi[i - 1]) - hi[i - 1] * u[i - 1])
-            u.append(hi[i] / l[i])
-            z.append((q1[i] - hi[i - 1] * z[i - 1]) / l[i])
-
-        l.append(1)
-        z.append(0)
-
-        c = [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
-        b = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        d = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
-        for j in range(1, len(self.xi)):
-            i = len(self.xi) - 1 - j
-            c[i] = z[i] - (u[i] * c[i + 1])
-            b[i] = ((self.yi[i + 1] - self.yi[i]) / hi[i]) - ((hi[i] * (c[i + 1] + (2 * c[i]))) / 3)
-            d[i] = (c[i + 1] - c[i]) / (3 * hi[i])
-
-        #print("A")
-        #print(q1)
-        #print("b")
-        #print(b)
-        #print("d")
-        #print(c)
-        #print("c")
-        #print(d)
-        #print("h")
-        #print(hi)
-        #print("l")
-        #print(l)
-        #print("U")
-        #print(u)
-        #print("z")
-        #print(z)
-        for i in range(len(self.xi) - 1):
-            if self.xi[i] < x < self.xi[i + 1]:
-                return self.yi[i] + b[i] * x + c[i] * pow(x, 2) + d[i] * pow(x, 3)
-
-
-
-
-
-
+        c = Gauss_Seidel(ATA,ATb, 5e-5)
         
-        
-
+        return c[0] + x * c[1] + c[2]*x**2 + c[3]*x**3
