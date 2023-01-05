@@ -1,4 +1,4 @@
-from numpy import zeros
+from numpy import zeros,array, eye, copy, dot
 
 def Gauss_Seidel(A, b, tol):
             size = len(A)
