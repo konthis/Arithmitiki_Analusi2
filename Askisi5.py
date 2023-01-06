@@ -1,10 +1,8 @@
-from pylab import pi,sin, plot,xlabel,ylabel,grid,show
+from pylab import pi,sin
 from MatrixSolve import Gauss_Seidel
-import random
-from numpy import array, zeros, linalg, dot, transpose
+from numpy import zeros
 
 class Exercise5:
-    
     points = [(-pi, sin(-pi)),
               (-2.6, sin(-2.6)),
               (-1.3, sin(-1.3)),
@@ -15,9 +13,6 @@ class Exercise5:
               (1.7, sin(1.7)),
               (2.75, sin(2.75)),
               (pi,sin(pi))]
-
-    xi = [i for i,j in points]
-    yi = [j for i,j in points]
 
     def Li(self,i, x):
         n = len(self.points) # total points

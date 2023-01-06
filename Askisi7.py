@@ -53,33 +53,75 @@ class Exercise7:
                  (9,3790.35),
                  (10,3851.0601)]
 
+    predictionsIndexes = [11,  #6/5  1 close after 5/5
+                          17,] #12/5 5 closes after 5/5
 
-    def __polyonym(self, c, x):
+    actualPredictedCloses = [(11, 3813,55),
+                             (17, 3916,22)]
+
+    def solvePolynom(self, c, x):
         for i in range(5-len(c)):
             c = list(c)
             c.append(0)
         return c[0] + x*c[1] + c[2]*x**2+\
                c[3]*x**3 + c[4]*x**4
 
-    def predictDayAfter(self):
+    def calculateCoeffs(self):
+        return leastSquares2(self.pointsDTX),\
+               leastSquares3(self.pointsDTX),\
+               leastSquares4(self.pointsDTX),\
+               leastSquares2(self.pointsDPA),\
+               leastSquares3(self.pointsDPA),\
+               leastSquares4(self.pointsDPA)
+
+    def predictions(self):
         x = [point[0] for point in self.pointsDPA]
-        p2DTX = leastSquares2(self.pointsDTX)
-        y2DTX = [self.__polyonym(p2DTX, p[0]) for p in self.pointsDTX]
 
-        p2DPA = leastSquares2(self.pointsDPA)
-        y2DPA = [self.__polyonym(p2DPA, p[0]) for p in self.pointsDPA]
+        c2DTX, c3DTX, c4DTX, c2DPA, c3DPA, c4DPA = self.calculateCoeffs() 
+        print("\tDTX")
+        print("2nd degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c2DTX, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c2DTX, 
+                                 self.predictionsIndexes[1]))
 
-        p3DTX = leastSquares3(self.pointsDTX)
-        y3DTX = [self.__polyonym(p3DTX, p[0]) for p in self.pointsDTX]
-        
-        p3DPA = leastSquares3(self.pointsDPA)
-        y3DPA = [self.__polyonym(p3DPA, p[0]) for p in self.pointsDPA]
+        print("3rd degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c3DTX, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c3DTX, 
+                                 self.predictionsIndexes[1]))
 
-        p4DTX = leastSquares4(self.pointsDTX)
-        y4DTX = [self.__polyonym(p4DTX, p[0]) for p in self.pointsDTX]
+        print("4th degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c4DTX, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c4DTX, 
+                                 self.predictionsIndexes[1]))
 
-        p4DPA = leastSquares4(self.pointsDPA)
-        y4DPA = [self.__polyonym(p4DPA, p[0]) for p in self.pointsDPA]
+        print("\tDPA")
+        print("2nd degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c2DPA, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c2DPA, 
+                                 self.predictionsIndexes[1]))
+
+        print("3rd degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c3DPA, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c3DPA, 
+                                 self.predictionsIndexes[1]))
+
+        print("4th degree: ")
+        print("- 6/5 prediction", self.solvePolynom(c4DPA, 
+                                 self.predictionsIndexes[0]))
+        print("- 12/5 prediction", self.solvePolynom(c4DPA, 
+                                 self.predictionsIndexes[1]))
+
+        y2DTX = [self.solvePolynom(c2DTX, p[0]) for p in self.pointsDTX]
+        y2DPA = [self.solvePolynom(c2DPA, p[0]) for p in self.pointsDPA]
+        y3DTX = [self.solvePolynom(c3DTX, p[0]) for p in self.pointsDTX]
+        y3DPA = [self.solvePolynom(c3DPA, p[0]) for p in self.pointsDPA]
+        y4DTX = [self.solvePolynom(c4DTX, p[0]) for p in self.pointsDTX]
+        y4DPA = [self.solvePolynom(c4DPA, p[0]) for p in self.pointsDPA]
         
         plot(x, y2DPA, 'r')
         plot(x, y3DPA, 'g')
