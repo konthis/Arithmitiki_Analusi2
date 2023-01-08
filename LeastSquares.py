@@ -1,6 +1,5 @@
-from numpy import zeros,dot,transpose, linalg
-from MatrixSolve import Gauss_Seidel, Gauss
-
+from numpy import zeros,dot,transpose
+from MatrixSolve import Gauss
 
 def leastSquares2(points):
     n = len(points)
@@ -14,16 +13,10 @@ def leastSquares2(points):
         
     ATA = dot(transpose(A),A)
     ATb = dot(transpose(A),b)
-    #c = Gauss(ATA,ATb)
-    #c = Gauss_Seidel(ATA,ATb, 5e-5)
-    c = linalg.solve(ATA,ATb)
-
-    #Q,R = linalg.qr(A)
-    #b = dot(transpose(Q), b)
-    #c = R/b
+    c = Gauss(ATA,ATb)
     return c
 
-def leastSquares3exc5(x, points):
+def leastSquares3Solve(x, points):
     c = leastSquares3(points)
     return c[0] + x * c[1] + c[2]*x**2 + c[3]*x**3
 
@@ -40,13 +33,7 @@ def leastSquares3(points):
         
     ATA = dot(transpose(A),A)
     ATb = dot(transpose(A),b)
-    #c = Gauss_Seidel(ATA,ATb, 5e-5)
-    #c = Gauss(ATA,ATb)
-    c = linalg.solve(ATA,ATb)
-
-    #Q,R = linalg.qr(A)
-    #b = dot(transpose(Q), b)
-    #c = R/b
+    c = Gauss(ATA,ATb)
     return c
 
 def leastSquares4(points):
@@ -63,11 +50,5 @@ def leastSquares4(points):
         
     ATA = dot(transpose(A),A)
     ATb = dot(transpose(A),b)
-    #c = Gauss_Seidel(ATA,ATb, 5e-5)
-    #c = Gauss(ATA,ATb)
-    c = linalg.solve(ATA, ATb) 
-
-    #Q,R = linalg.qr(A)
-    #b = dot(transpose(Q), b)
-    #c = R/b
+    c = Gauss(ATA,ATb)
     return c

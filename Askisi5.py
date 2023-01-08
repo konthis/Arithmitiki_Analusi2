@@ -1,5 +1,5 @@
 from pylab import pi,sin
-from MatrixSolve import Gauss_Seidel
+from MatrixSolve import Gauss
 from numpy import zeros
 
 class Exercise5:
@@ -52,7 +52,7 @@ class Exercise5:
             A[i][i+1] = dx[i]
             r[i] = 3*(dy[i]/dx[i] - dy[i-1]/dx[i-1])
 
-        c = Gauss_Seidel(A,r, 5e-5) # Solve for ci
+        c = Gauss(A,r) # Solve for ci
         
         b = zeros((n-1,1))
         d = zeros((n-1,1))

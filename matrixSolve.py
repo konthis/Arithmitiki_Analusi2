@@ -1,18 +1,5 @@
 from numpy import zeros,array, eye, copy, dot
 
-def Gauss_Seidel(A, b, tol):
-    size = len(A)
-    x = zeros((2,size))
-    while True:
-        for i in range(size):
-            x[1][i] = (b[i] - \
-                sum([A[i][j]*x[1][j] for j in range(i-1)]) - \
-                sum([A[i][j]*x[0][j] for j in range(i+1,size)]))/A[i][i]
-        if abs(max(x[1] - x[0])) <= tol:
-            return x[1]
-        x[0] = x[1]
-
-
 def Gauss(A,b):
     size = len(A)
     A = array(A)
@@ -42,6 +29,7 @@ def Gauss(A,b):
             U[i][j] = A[i][j]
 
     b = array(b)
+
     y = copy(dot(P,b))
 
     # forwards
@@ -52,13 +40,19 @@ def Gauss(A,b):
         for j in range(i):
             y[i] = (y[i] - L[i][j]*y[j])/L[i][i]
 
-    x = copy(y)
-    # backwards
+    
+    x = zeros((size,1))
+    x[size-1] = y[size-1]/U[size-1][size-1]
+
     for i in range(size-1,-1,-1):
         if U[i][i] == 0: #Division by 0
             x[i] = 0
             continue
+        xv = y[i]
         for j in range(i+1,size):
-            x[i] =(x[i] - U[i][j]*x[j])/U[i][i]
+            xv -= U[i][j]*x[j]
+        xv /= U[i][i]
+        x[i] = xv
 
     return x
+

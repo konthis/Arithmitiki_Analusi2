@@ -1,20 +1,7 @@
 from numpy import pi,sin
-import random
 
 class Exercise6:
 
-    points = [(0,sin(0)),
-              (pi/20, sin(pi/20)),
-              (pi/18, sin(pi/18)),
-              (pi/15, sin(pi/15)),
-              (pi/14, sin(pi/14)),
-              (pi/11, sin(pi/11)),
-              (pi/9, sin(pi/9)),
-              (pi/7.5, sin(pi/7.5)),
-              (pi/5, sin(pi/5)),
-              (pi/4, sin(pi/4)),
-              (pi/3, sin(pi/3)),
-              (pi/2,sin(pi/2))]
     a = 0
     b = pi/2
     n = 10
@@ -27,7 +14,7 @@ class Exercise6:
 
     def f(self,x): return sin(x)
 
-    def Simpson(self):
+    def simpson(self):
         y = self.calculateFx()
         sum = y[0] + y[self.n]
         for i in range(1, self.n):
@@ -43,12 +30,15 @@ class Exercise6:
         e = (((self.b-self.a)**5)*M)/(180*(self.n**4))
 
         # Actual F, a=0, b=pi/2, F = cos(x), Fab = 1 - 0 = 1
-        print("Theoretical error: ", e)
-        print("Numeric error: ", abs(1-In))
+        print("Simpson's rule: \n")
+        print("Actual value: 1.")
+        print("Approximated value: %.6f"%In)
+        print("Theoretical error: %.6f"%e)
+        print("Numeric error: %.6f"%abs(1-In), "\n")
 
         return In
     
-    def TrapezoidRule(self):
+    def trapezoidRule(self):
         y = self.calculateFx()
         sum = y[0] + y[self.n]
         for i in range(1,self.n):
@@ -62,6 +52,9 @@ class Exercise6:
         e = (((self.b-self.a)**3)*M)/(12*(self.n**2))
 
         # Actual F, a=0, b=pi/2, F = cos(x), Fab = 1 - 0 = 1
-        print("Theoretical error: ", e)
-        print("Numeric error: ", abs(1-In))
+        print("Trapezoid rule: \n")
+        print("Actual value: 1.")
+        print("Approximated value: %.6f"%In)
+        print("Theoretical error: %.6f"%e)
+        print("Numeric error: %.6f"%abs(1-In),"\n")
         return In
