@@ -3,9 +3,9 @@ from pylab import sin, array, plot,show, legend
 from numpy import pi
 
 from LeastSquares import leastSquares3Solve
-from Askisi5 import Exercise5
-from Askisi6 import Exercise6
-from Askisi7 import Exercise7
+from Ex5 import Exercise5
+from Ex6 import Exercise6
+from Ex7 import Exercise7
 
 def exercise5():
     exc = Exercise5()
