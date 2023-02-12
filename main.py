@@ -3,12 +3,12 @@ from pylab import sin, array, plot,show, legend
 from numpy import pi
 
 from LeastSquares import leastSquares3Solve
-from Ex5 import Exercise5
-from Ex6 import Exercise6
-from Ex7 import Exercise7
+from Interp import Interpolation
+from Integral import IntegralSolve
+from Prediction import Prediction
 
-def exercise5():
-    exc = Exercise5()
+def interp():
+    exc = Interpolation()
     x = [random.uniform(-3.14,3.14) for i in range(200)]
     x.sort() # x0<x1<...<xn-1
     # Approx. pi/12
@@ -38,18 +38,18 @@ def exercise5():
     print("Max splines error: ", max(abs(array(yDiffSplines))))
     print("Max least squares error: ", max(abs(array(yDiffLeastSquares))))
 
-def exercise6():
-    exc = Exercise6()
+def integral():
+    exc = IntegralSolve()
     exc.trapezoidRule()
     exc.simpson()
 
-def exercise7():
-    exc = Exercise7()
+def pred():
+    exc = Prediction()
     exc.predictions()
 
 def main():
-    exercise5()
-    #exercise6()
-    #exercise7()
+    interp()
+    integral()
+    pred()
 
 main()
