@@ -67,3 +67,4 @@ def Gauss_seidel(self):
                     L[k][k] = sqrt(L[k][k])
 
         return L
+
